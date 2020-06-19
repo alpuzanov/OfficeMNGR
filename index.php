@@ -7,6 +7,8 @@ require_once "MyUtil.php";
 if (!isset($_SESSION['user_id'])) {
   header("Location: login.php");
   return;
+
+//комент
 }
 ?>
 
