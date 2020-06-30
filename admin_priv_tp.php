@@ -35,7 +35,7 @@ $tb_contents = $tb_contents -> fetchall();
 
 
   <head>
-    <title>Team Calculator - Edit privilige types</title>
+    <title>Office Manager - Edit privilige types</title>
   </head>
 
 <body>

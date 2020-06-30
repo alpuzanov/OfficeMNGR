@@ -15,12 +15,15 @@ if (!isset($_SESSION['user_id'])) {
 <html>
 <link type="text/css" rel="stylesheet" href="MyStyle.css">
   <head>
-    <title>Team Calculator</title>
+    <title>Office Manager</title>
   </head>
 
 <body>
   <?php
   require_once "NavBar.php";
+  echo('<pre>');
+  var_dump($_SESSION['comp_priv']);
+  echo('</pre>');
   ?>
 <div>
   <h2>Добро пожаловать, <?php echo ($_SESSION['username']);?></h2>

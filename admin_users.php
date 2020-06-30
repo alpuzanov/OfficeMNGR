@@ -77,7 +77,7 @@ $tb3_contents = $tb3_contents -> fetchall(PDO::FETCH_ASSOC);
 
 
   <head>
-    <title>Team Calculator - Edit users</title>
+    <title>Office Managers - Edit users</title>
   </head>
 
 <body>
