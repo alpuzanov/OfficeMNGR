@@ -15,32 +15,14 @@
       case 'privilege_types':
             $tbl = 'privilege_types';
             break;
-      case 'planning_domains':
-            $tbl = 'planning_domains';
+      case 'companies':
+            $tbl = 'companies';
             break;
       case 'users':
             $tbl = 'users';
             break;
       case 'assigned_privileges':
             $tbl = 'assigned_privileges';
-            break;
-      case 'resource_roles':
-            $tbl = 'resource_roles';
-            break;
-      case 'resource_specializations':
-            $tbl = 'resource_specializations';
-            break;
-      case 'resource_levels':
-            $tbl = 'resource_levels';
-            break;
-      case 'resource_locations':
-            $tbl = 'resource_locations';
-            break;
-      case 'org_units':
-            $tbl = 'org_units';
-            break;
-      case 'resource_types':
-            $tbl = 'resource_types';
             break;
       default:
             $_SESSION['$FlashMessages']->set('bad_table_name', 'error', 'Попытка ввода неопределенной таблицы!');

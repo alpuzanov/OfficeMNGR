@@ -38,7 +38,7 @@ $tb_contents = $tb_contents -> fetchall();
     <title>Office Manager - Edit privilige types</title>
   </head>
 
-<body>
+<body id="PageBody">
 <?php
   require_once "NavBar.php";
   $_SESSION['$FlashMessages']->show('bad_table_name');
@@ -87,28 +87,19 @@ $tb_contents = $tb_contents -> fetchall();
     //Отключаем кеш для вызова
     $.ajaxSetup({cashe: false});
 
-    //По выбору checkbox'а проставляем 1 колонку пометки на удаление
-    $('#TableRows').on('change', '.del_Checkbox',function() {
-      var mark_del = Number($(this).closest('tr').children('.mark_del').html());
-      mark_del = (mark_del+1) % 2;
+    //Записываем данные о таблицах
 
-      $(this).closest('tr').toggleClass('mark_del');
-      $(this).closest('tr').children('.mark_del').html(mark_del);
+    $('#TableRows').data('mandatory_columns',[3,4]);
+    $('#TableRows').data('mark_del_column',1);
 
-      //Подсвечиваем незаполненные
-      check_table_notempty ('TableRows', [3,4], 1);
-    });
 
-    //По клику меняем содержание ячейки с классом td_Editable на поле ввода с содержимым ячейки
-    $('#TableRows').on('click', '.td_Editable',function() {
-      contentBeforeEdit = $(this).text();
-      $(this).removeClass('td_Editable');
-      $(this).html('<input type="text" value="'+contentBeforeEdit+'" class="inputActive">');
-      $(this).children('.inputActive').select();
-    });
+    mandatory_columns = [3,4];
+    mark_del_column = 1;
+
 
     //В момент выхода из редактирования - заменяем поле ввода/выпадающий список на текст с содержимым элемента
-    $('#TableRows').on('blur', '.inputActive', function(){
+    $('#PageBody').on('blur', '.inputActive', function(){
+
       $(this).removeClass('inputActive');
 
       //Устанавливаем необходимый класс в зависимости от типа элемента
@@ -130,11 +121,18 @@ $tb_contents = $tb_contents -> fetchall();
             $(this).closest('tr').children('.mark_edit').html(1);
           }
       }
+
+
+      var TableId = $(this).closest('table').get(0).id;
+      console.log(TableId);
+
       //Устанавливаем выбранное/введенное значение
       $(this).parent().html(contentAfterEdit);
 
+      console.log($("#"+TableId).data("mandatory_columns"));
+
       //подсвечиваем незаполненные
-      check_table_notempty ('TableRows', [3,4], 1);
+      check_table_notempty (TableId, mandatory_columns, mark_del_column);
     });
 
     //Добавляем строку

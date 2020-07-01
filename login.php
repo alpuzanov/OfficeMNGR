@@ -40,10 +40,16 @@ if ( isset($_POST['email']) && isset($_POST['pass']) )
                 	a.familyname,
                 	a.markdel,
                 	b.priv_id,
-                	b.comp_id
+                  d.priv_name,
+                	b.comp_id,
+                  c.comp_name
                 FROM (SELECT * FROM users WHERE email = :em AND password = :pw) AS a
                 LEFT JOIN (SELECT * FROM assigned_privileges WHERE comp_id IS NOT NULL) AS b
                 ON a.user_id = b.user_id
+                LEFT JOIN companies AS c
+                ON b.comp_id = c.comp_id
+                LEFT JOIN privileges as d
+                ON b.priv_id = d.priv_id
                 ";
 
         $stmt = $pdo -> prepare($sql);
@@ -73,12 +79,15 @@ if ( isset($_POST['email']) && isset($_POST['pass']) )
                 $_SESSION['sys_priv'] = array();
                 $_SESSION['comp_priv'] = array();
                 for ($i=0; $i < count($usr_contents); $i++) {
+                  if ($usr_contents[$i]['priv_id'] == 9) {
+                    $_SESSION['company'] = array($usr_contents[$i]['comp_id']=>$usr_contents[$i]['comp_name']);
+                  }
                   if (is_null($usr_contents[$i]['comp_id'])) {
                     $_SESSION['sys_priv'][] = $usr_contents[$i]['priv_id'];
                     //$usr_contents[$i]['dom_id']
                   }
                   if (!is_null($usr_contents[$i]['comp_id'])) {
-                    $_SESSION['comp_priv'][] = [$usr_contents[$i]['comp_id']]['comp_name'];
+                    $_SESSION['comp_priv'][] = array("comp_id"=>$usr_contents[$i]['comp_id'],"priv_id"=>$usr_contents[$i]['priv_id']);
                   }
                 }
                 header("Location: index.php");
@@ -95,9 +104,9 @@ if ( isset($_POST['email']) && isset($_POST['pass']) )
 <html>
 <link type="text/css" rel="stylesheet" href="MyStyle.css">
 <head>
-<title>Team Calc Login</title>
+<title>Office Manager Login</title>
 </head>
-<body>
+<body id="PageBody">
 <div class="container">
 <h1>Представьтесь, пожалуйста</h1>
 <?php

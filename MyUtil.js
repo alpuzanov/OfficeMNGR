@@ -117,3 +117,82 @@ function ValidateEmailPass(id_pass, id_email) {
       });
 
     }
+
+
+
+    $(document).ready(function()
+    {
+
+    //Набор функций, обеспечивающих работу с редактируемыми и выпадающими элементами таблиц
+
+      //По клику меняем содержание ячейки с классом td_Editable на поле ввода с содержимым ячейки
+      $('#PageBody').on('click', '.td_Editable',function() {
+        contentBeforeEdit = $(this).text();
+        $(this).removeClass('td_Editable');
+        $(this).html('<input type="text" value="'+contentBeforeEdit+'" class="inputActive">');
+        $(this).children('.inputActive').select();
+      });
+
+      //По клику меняем содержание ячейки с классом td_Selectable на лист выбора с содержимым ячейки
+      $('#PageBody').on('click', '.td_Selectable', function() {
+          contentBeforeEdit = Number($(this).prev().text());
+
+          $(this).removeClass('td_Selectable');
+          $(this).html('<select class="inputActive"></select>');
+          var response = $.getJSON("table_reader.php", {table: 'Privilege_types'}, function(){})
+          .done(function() {
+              var len = response.responseJSON.length;
+              for (i = 0; i < len; i++) {
+                  $('.inputActive').append('<option value="'+response.responseJSON[i]['priv_tp_id']+'">'+response.responseJSON[i]['priv_tp_name']+'</option>');
+                }
+              $('.inputActive').val(contentBeforeEdit);
+              $('.inputActive').focus();
+          })
+      });
+
+      // //В момент выхода из редактирования Input или Select - заменяем поле ввода/выпадающий список на текст с содержимым элемента
+      // $('#PageBody').on('blur', '.inputActive', function(){
+      //   $(this).removeClass('inputActive');
+      //
+      //   //Устанавливаем необходимый класс в зависимости от типа элемента
+      //   if ($(this).is('select')){
+      //     var contentAfterEdit = $('option:selected',this).text();
+      //     $(this).parent().attr('class','td_Selectable');
+      //     // устанавливаем необходимое значение ID из связанной таблицы в соотв-е поля
+      //     $(this).parent().prev().html($(this).val());
+      //     // устанавливаем флаг mark_edit на строке, если было изменение в значении
+      //     if ($(this).val() != contentBeforeEdit) {
+      //       $(this).closest('tr').children('.mark_edit').html(1);
+      //     }
+      //   }
+      //   else if ($(this).is('input')) {
+      //     var contentAfterEdit = $(this).get(0).value;
+      //       $(this).parent().attr('class','td_Editable');
+      //       // устанавливаем флаг mark_edit на строке, если было изменение в значении
+      //       if (contentAfterEdit != contentBeforeEdit) {
+      //         $(this).closest('tr').children('.mark_edit').html(1);
+      //       }
+      //   }
+      //
+      //   var TableId = $(this).closest('table').get(0).id;
+      //
+      //   //Устанавливаем выбранное/введенное значение
+      //   $(this).parent().html(contentAfterEdit);
+      //
+      //   //подсвечиваем незаполненные
+      //   check_table_notempty (TableId, mandatory_columns, mark_del_column);
+      // });
+
+      //По выбору checkbox'а об удалении - проставляем в колонку с классом "mark_del" пометку на удаление, по снятию - убираем
+      $('#PageBody').on('change', '.del_Checkbox',function() {
+        var mark_del = Number($(this).closest('tr').children('.mark_del').html());
+        mark_del = (mark_del+1) % 2;
+
+        $(this).closest('tr').toggleClass('mark_del');
+        $(this).closest('tr').children('.mark_del').html(mark_del);
+
+        //Подсвечиваем незаполненные
+        check_table_notempty ($(this).closest('table').get(0).id, mandatory_columns, mark_del_column);
+      });
+
+    });

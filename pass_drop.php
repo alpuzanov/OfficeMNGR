@@ -33,9 +33,9 @@
       return;
     }
 
-    $subject = "Учетная запись TeamCalc";
-    $message = "<p>Для вас создана учетная запись в системе TeamCalc </p><p>Для окончания регистрации пожалуйста пройдите по ссылке:</p>";
-    $message = $message.'<a href="http://localhost/teamcalc/register.php?invitation='.$invitation.' '.'">Зарегистрироваться</a>';
+    $subject = "Учетная запись Avocado Office Manager";
+    $message = "<p>Для вас создана учетная запись в Avocado Office Manager </p><p>Для окончания регистрации пожалуйста пройдите по ссылке:</p>";
+    $message = $message.'<a href="http://localhost/OfficeMNGR/register.php?invitation='.$invitation.' '.'">Зарегистрироваться</a>';
 
     $headers = array(
         'From' => 'mailer.AP@yandex.ru',

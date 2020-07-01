@@ -18,11 +18,11 @@ if (!isset($_SESSION['user_id'])) {
     <title>Office Manager</title>
   </head>
 
-<body>
+<body id="PageBody">
   <?php
   require_once "NavBar.php";
   echo('<pre>');
-  var_dump($_SESSION['comp_priv']);
+  var_dump($_SESSION['company']);
   echo('</pre>');
   ?>
 <div>

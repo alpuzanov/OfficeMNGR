@@ -15,25 +15,6 @@
       case 'Resource_types':
             $tbl = 'Resource_types';
             break;
-      case 'Org_units_all':
-            $tbl = 'Org_units_all';
-            break;
-      case 'Org_unit_types':
-            $tbl = 'Org_unit_types';
-            break;
-      case 'Resource_roles':
-            $tbl = 'Resource_roles';
-            break;
-      case 'Resource_specializations':
-            $tbl = 'Resource_specializations';
-            break;
-      case 'Resource_levels':
-            $tbl = 'Resource_levels';
-            break;
-      case 'Resource_locations':
-            $tbl = 'Resource_locations';
-            break;
-
 
       // ДОПИСАТЬ возврат ошибки в случае, если не введена таблица
     }

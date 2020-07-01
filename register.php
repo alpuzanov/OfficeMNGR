@@ -56,7 +56,7 @@ $sql = "SELECT
           a.user_id,
           a.name,
           a.familyname,
-          a.department,
+          a.description,
           a.email,
           a.invitation,
           a.markdel
@@ -85,10 +85,10 @@ $_SESSION['user_id'] = $row['user_id'];
 <html>
   <link type="text/css" rel="stylesheet" href="MyStyle.css">
   <head>
-    <title>Team Calculator - User register</title>
+    <title>Office Manager - Register user</title>
   </head>
 
-  <body>
+  <body id="PageBody">
     <div>
       <h4>Для вас создан профиль со следующей информацией:</h4>
       <label>ID:</label>
@@ -97,8 +97,8 @@ $_SESSION['user_id'] = $row['user_id'];
       <p><?php echo($row['name'].' '.$row['familyname']) ?></p>
       <label>Email:</label>
       <p><?php echo ($row['email']) ?></p>
-      <label>Подразделение:</label>
-      <p><?php echo ($row['department']) ?></p>
+      <label>Описание:</label>
+      <p><?php echo ($row['description']) ?></p>
       <h4>Для активации учетной записи, создайте пароль:</h4>
       <?php
         $_SESSION['$FlashMessages']->show('pass_empty');

@@ -15,7 +15,7 @@ $tb_contents = $pdo -> query("
                               	  a.user_id,
                                   a.name,
                                   a.familyname,
-                                  a.department,
+                                  a.description,
                                   a.email,
                                   a.password,
                                   IF(a.invitation is null, '0', '1') as invitation,
@@ -29,16 +29,14 @@ $Rows_num = $tb_contents -> rowCount();
 $tb_contents = $tb_contents -> fetchall(PDO::FETCH_ASSOC);
 
 
-//Читаем данные из таблицы PRIVILEGES - полномочия
+//Читаем данные из таблицы PRIVILEGES - только системные полномочия
 $tb2_contents = $pdo -> query("
                                 SELECT
                                 	us.user_id,
-                                	pt.priv_tp_name,
                                 	p.priv_name
                                 FROM users AS us
-                                	left join (select * from assigned_privileges where priv_id is not null) as ap on (us.user_id = ap.user_id)
+                                	left join (select * from assigned_privileges where comp_id is null) as ap on (us.user_id = ap.user_id)
                                 	left join privileges as p on ap.priv_id = p.priv_id
-                                	left join privilege_types as pt on p.priv_tp_id = pt.priv_tp_id
                                 WHERE p.priv_id IS NOT NULL
                                 ORDER BY 2
                               ");
@@ -47,25 +45,6 @@ $tb2_contents = $pdo -> query("
 $Rows2_num = $tb2_contents -> rowCount();
 //Забираем все строки
 $tb2_contents = $tb2_contents -> fetchall(PDO::FETCH_ASSOC);
-
-
-
-//Читаем данные из таблицы PRIVILEGES - области планирования
-$tb3_contents = $pdo -> query("
-                                select
-                                	us.user_id,
-                                	pd.dom_name
-                                from users as us
-                                	left join (select * from assigned_privileges where dom_id is not null) as ap on (us.user_id = ap.user_id)
-                                	left join planning_domains as pd on ap.dom_id = pd.dom_id
-                                where pd.dom_id is not null
-                                order by 2
-                              ");
-
-//Считаем сколько записано строк
-$Rows3_num = $tb3_contents -> rowCount();
-//Забираем все строки
-$tb3_contents = $tb3_contents -> fetchall(PDO::FETCH_ASSOC);
 
 ?>
 
@@ -77,10 +56,10 @@ $tb3_contents = $tb3_contents -> fetchall(PDO::FETCH_ASSOC);
 
 
   <head>
-    <title>Office Managers - Edit users</title>
+    <title>Office Manager - Edit users</title>
   </head>
 
-<body>
+<body id="PageBody">
 
 <?php
   require_once "NavBar.php";
@@ -107,12 +86,11 @@ $tb3_contents = $tb3_contents -> fetchall(PDO::FETCH_ASSOC);
           <th>E-mail</th>
           <th>Имя</th>
           <th>Фамилия</th>
-          <th>Подразделение</th>
+          <th>Описание</th>
           <th>Статус пароля</th>
           <th></th>
+          <th>Системные полномочия</th>
           <th>Полномочия</th>
-          <th>Области планирования</th>
-          <th></th>
           <th>Заблокирован</th>
         </tr>
         <?php
@@ -137,7 +115,7 @@ $tb3_contents = $tb3_contents -> fetchall(PDO::FETCH_ASSOC);
           echo('<td class="td_Editable">'.$tb_contents[$i]['email'].'</td>');
           echo('<td class="td_Editable">'.$tb_contents[$i]['name'].'</td>');
           echo('<td class="td_Editable">'.$tb_contents[$i]['familyname'].'</td>');
-          echo('<td class="td_Editable">'.$tb_contents[$i]['department'].'</td>');
+          echo('<td class="td_Editable">'.$tb_contents[$i]['description'].'</td>');
 
           if ($tb_contents[$i]['password'] != '') {
             echo('<td>Установлен</td>');
@@ -160,23 +138,9 @@ $tb3_contents = $tb3_contents -> fetchall(PDO::FETCH_ASSOC);
           }
           $Assigned_Priv = substr($Assigned_Priv, 0, strlen($Assigned_Priv)-2);
           if ($Assigned_Priv == '') {
-            $Assigned_Priv = 'Нет полномочий';
+            $Assigned_Priv = 'Нет системных полномочий';
           }
           echo('<td>'.$Assigned_Priv.'</td>');
-
-          $Assigned_Dom = '';
-          for ($j=0; $j < $Rows3_num ; $j++) {
-            if ($tb3_contents[$j]['user_id'] == $tb_contents[$i]['user_id']) {
-              $Assigned_Dom = $Assigned_Dom.$tb3_contents[$j]['dom_name'].', ';
-            }
-          }
-          $Assigned_Dom = substr($Assigned_Dom, 0, strlen($Assigned_Dom)-2);
-          if ($Assigned_Dom == '') {
-            $Assigned_Dom = 'Нет областей';
-          }
-          echo('<td>'.$Assigned_Dom.'</td>');
-
-
           echo('<td><input type="button" value="Изменить" class="priv_manage"></td>');
 
 
@@ -246,11 +210,11 @@ $tb3_contents = $tb3_contents -> fetchall(PDO::FETCH_ASSOC);
         var del_warn = 'При переходе все изменения в таблице будут потеряны!\n Вы действительно хотите отменить изменения и перейти к редактированию полномочий пользователя?';
         //Выводим сообщение пользователю на подтверждение
         if (confirm(del_warn)) {
-          window.location.href = '/teamcalc/admin_assigned_priv.php?priv_manage_id='+id_priv_manage;
+          window.location.href = '/OfficeMNGR/admin_assigned_priv.php?priv_manage_id='+id_priv_manage;
         }
       }
       else {
-        window.location.href = '/teamcalc/admin_assigned_priv.php?priv_manage_id='+id_priv_manage;
+        window.location.href = '/OfficeMNGR/admin_assigned_priv.php?priv_manage_id='+id_priv_manage;
       };
     });
 
@@ -274,13 +238,13 @@ $tb3_contents = $tb3_contents -> fetchall(PDO::FETCH_ASSOC);
     });
 
 
-    //По клику меняем содержание ячейки с классом td_Editable на поле ввода с содержимым ячейки
-    $('#TableRows').on('click', '.td_Editable',function() {
-      contentBeforeEdit = $(this).text();
-      $(this).removeClass('td_Editable');
-      $(this).html('<input type="text" value="'+contentBeforeEdit+'" class="inputActive">');
-      $(this).children('.inputActive').select();
-    });
+    // //По клику меняем содержание ячейки с классом td_Editable на поле ввода с содержимым ячейки
+    // $('#TableRows').on('click', '.td_Editable',function() {
+    //   contentBeforeEdit = $(this).text();
+    //   $(this).removeClass('td_Editable');
+    //   $(this).html('<input type="text" value="'+contentBeforeEdit+'" class="inputActive">');
+    //   $(this).children('.inputActive').select();
+    // });
 
     //В момент выхода из редактирования - заменяем поле ввода/выпадающий список на текст с содержимым элемента
     $('#TableRows').on('blur', '.inputActive', function(){
@@ -324,7 +288,6 @@ $tb3_contents = $tb3_contents -> fetchall(PDO::FETCH_ASSOC);
                               '<td>Пользователь не создан</td>'+
                               '<td></td>'+
                               '<td>Пользователь не создан</td>'+
-                              '<td>Пользователь не создан</td>'+
                               '<td></td>'+
                               '<td align="center"><input type="checkbox" value=0 class="block_Checkbox"></td></tr>');
       //подсвечиваем незаполненные
@@ -365,7 +328,7 @@ $tb3_contents = $tb3_contents -> fetchall(PDO::FETCH_ASSOC);
             merge_element.user_id = tbl[i][0];
             merge_element.name = tbl[i][4];
             merge_element.familyname = tbl[i][5];
-            merge_element.department = tbl[i][6];
+            merge_element.description = tbl[i][6];
             merge_element.email = tbl[i][3];
             merge_element.markdel = tbl[i][1];
             arr_for_merge.push(merge_element);
@@ -374,7 +337,7 @@ $tb3_contents = $tb3_contents -> fetchall(PDO::FETCH_ASSOC);
             var add_element = {};
             add_element.name = tbl[i][4];
             add_element.familyname = tbl[i][5];
-            add_element.department = tbl[i][6];
+            add_element.description = tbl[i][6];
             add_element.email = tbl[i][3];
             add_element.markdel = tbl[i][1];
             arr_for_adding.push(add_element);
