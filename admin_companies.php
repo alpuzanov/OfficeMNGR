@@ -87,47 +87,11 @@ $tb_contents = $tb_contents -> fetchall();
     //Отключаем кеш для вызова
     $.ajaxSetup({cashe: false});
 
-    //По выбору checkbox'а проставляем 1 колонку пометки на удаление
-    $('#TableRows').on('change', '.del_Checkbox',function() {
-      var mark_del = Number($(this).closest('tr').children('.mark_del').html());
-      mark_del = (mark_del+1) % 2;
-
-      $(this).closest('tr').toggleClass('mark_del');
-      $(this).closest('tr').children('.mark_del').html(mark_del);
-
-      //Подсвечиваем незаполненные
-      check_table_notempty ('TableRows', [3,4], 1);
-    });
-
-    //В момент выхода из редактирования - заменяем поле ввода/выпадающий список на текст с содержимым элемента
-    $('#TableRows').on('blur', '.inputActive', function(){
-      $(this).removeClass('inputActive');
-
-      //Устанавливаем необходимый класс в зависимости от типа элемента
-      if ($(this).is('select')){
-        var contentAfterEdit = $('option:selected',this).text();
-        $(this).parent().attr('class','td_Selectable');
-        // устанавливаем необходимое значение ID из связанной таблицы в соотв-е поля
-        $(this).parent().prev().html($(this).val());
-        // устанавливаем флаг mark_edit на строке, если было изменение в значении
-        if ($(this).val() != contentBeforeEdit) {
-          $(this).closest('tr').children('.mark_edit').html(1);
-        }
-      }
-      else if ($(this).is('input')) {
-        var contentAfterEdit = $(this).get(0).value;
-          $(this).parent().attr('class','td_Editable');
-          // устанавливаем флаг mark_edit на строке, если было изменение в значении
-          if (contentAfterEdit != contentBeforeEdit) {
-            $(this).closest('tr').children('.mark_edit').html(1);
-          }
-      }
-      //Устанавливаем выбранное/введенное значение
-      $(this).parent().html(contentAfterEdit);
-
-      //подсвечиваем незаполненные
-      check_table_notempty ('TableRows', [3,4], 1);
-    });
+    //Вводим данные о структуре таблицы #TableRows
+    //Обязательные колонки
+    $('#TableRows').data('mandatory_columns',[3,4]);
+    //Индекс колонки пометки на удаление
+    $('#TableRows').data('mark_del_column',1);
 
     //Добавляем строку
     $('#Add_row').on('click',function() {
@@ -146,7 +110,7 @@ $tb_contents = $tb_contents -> fetchall();
     $('#Save_btn').on('click',function() {
 
 // Работаем только если заполнены все обязательные поля
-        if (check_table_notempty ('TableRows', [3,4], 1) == true){
+        if (check_table_notempty ('TableRows') == true){
 
           //Включаем индикатор загрузки
           $('#load_spin').removeClass('hidden');

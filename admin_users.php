@@ -170,6 +170,13 @@ $tb2_contents = $tb2_contents -> fetchall(PDO::FETCH_ASSOC);
     //Отключаем кеш для вызова
     $.ajaxSetup({cashe: false});
 
+    //Вводим данные о структуре таблицы #TableRows
+    //Обязательные колонки
+    $('#TableRows').data('mandatory_columns',[3,4,5]);
+    //Индекс колонки пометки на удаление
+    $('#TableRows').data('mark_del_column',1);
+
+
     //По клику на кнопку Показываем / скрываем заблокированных и меняем текст кнопки
     $('#Toggle_show_blocked').on('click',function() {
       if ($('#Toggle_show_blocked').hasClass('Show_hidden')) {
@@ -185,7 +192,7 @@ $tb2_contents = $tb2_contents -> fetchall(PDO::FETCH_ASSOC);
     //По клику на кнопку сбрасываем пароль и отправляем приглашение пользователю
     $('.drop_pass_invite').on('click',function() {
       //Работаем только если вся таблица заполнена корректно
-      if (check_table_notempty('TableRows', [3,4,5,6]) == true){
+      if (check_table_notempty('TableRows') == true){
         var id_pass_drop = Number($(this).closest('tr').children().get(0).innerHTML);
 
         $.ajax({
@@ -218,64 +225,6 @@ $tb2_contents = $tb2_contents -> fetchall(PDO::FETCH_ASSOC);
       };
     });
 
-
-    //По выбору checkbox'а в зависимости от настройки "скрыть/показать заблокированных" проставляем классы, отвечающие за отображение заблокированных и поле mark_del для записи пометки о блокировке
-    $('#TableRows').on('change', '.block_Checkbox',function() {
-      var val_after = (Number($(this).get(0).value)+1)%2;
-      $(this).get(0).value = val_after;
-
-      if ($('#Toggle_show_blocked').hasClass('Show_hidden')) {
-        $(this).closest('tr').toggleClass('blocked');
-      }
-      else {
-        $(this).closest('tr').toggleClass('blocked Hide_row');
-      }
-
-      $(this).closest('tr').children('.mark_edit').html(1);
-      $(this).closest('tr').children('.mark_del').html(val_after);
-      //Подсвечиваем незаполненные
-      check_table_notempty ('TableRows', [3,4,5,6]);
-    });
-
-
-    // //По клику меняем содержание ячейки с классом td_Editable на поле ввода с содержимым ячейки
-    // $('#TableRows').on('click', '.td_Editable',function() {
-    //   contentBeforeEdit = $(this).text();
-    //   $(this).removeClass('td_Editable');
-    //   $(this).html('<input type="text" value="'+contentBeforeEdit+'" class="inputActive">');
-    //   $(this).children('.inputActive').select();
-    // });
-
-    //В момент выхода из редактирования - заменяем поле ввода/выпадающий список на текст с содержимым элемента
-    $('#TableRows').on('blur', '.inputActive', function(){
-      $(this).removeClass('inputActive');
-
-      //Устанавливаем необходимый класс в зависимости от типа элемента
-      if ($(this).is('select')){
-        var contentAfterEdit = $('option:selected',this).text();
-        $(this).parent().attr('class','td_Selectable');
-        // устанавливаем необходимое значение ID из связанной таблицы в соотв-е поля
-        $(this).parent().prev().html($(this).val());
-        // устанавливаем флаг mark_edit на строке, если было изменение в значении
-        if ($(this).val() != contentBeforeEdit) {
-          $(this).closest('tr').children('.mark_edit').html(1);
-        }
-      }
-      else if ($(this).is('input')) {
-        var contentAfterEdit = $(this).get(0).value;
-          $(this).parent().attr('class','td_Editable');
-          // устанавливаем флаг mark_edit на строке, если было изменение в значении
-          if (contentAfterEdit != contentBeforeEdit) {
-            $(this).closest('tr').children('.mark_edit').html(1);
-          }
-      }
-      //Устанавливаем выбранное/введенное значение
-      $(this).parent().html(contentAfterEdit);
-
-      //подсвечиваем незаполненные
-      check_table_notempty ('TableRows', [3,4,5,6]);
-    });
-
     //Добавляем строку
     $('#Add_row').on('click',function() {
       $('#TableRows').append( '<tr><td class="td_id"></td>'+
@@ -291,7 +240,7 @@ $tb2_contents = $tb2_contents -> fetchall(PDO::FETCH_ASSOC);
                               '<td></td>'+
                               '<td align="center"><input type="checkbox" value=0 class="block_Checkbox"></td></tr>');
       //подсвечиваем незаполненные
-      check_table_notempty ('TableRows', [3,4,5,6]);
+      check_table_notempty ('TableRows');
     });
 
 
@@ -299,7 +248,7 @@ $tb2_contents = $tb2_contents -> fetchall(PDO::FETCH_ASSOC);
     $('#Save_btn').on('click',function() {
 
 // Работаем только если заполнены все обязательные поля
-    if (check_table_notempty ('TableRows', [3,4,5,6]) == true){
+    if (check_table_notempty ('TableRows') == true){
 
       //Включаем индикатор загрузки
       $('#load_spin').removeClass('hidden');

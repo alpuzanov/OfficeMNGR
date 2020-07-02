@@ -96,60 +96,36 @@ $tb_contents = $tb_contents -> fetchall();
     //Отключаем кеш для вызова
     $.ajaxSetup({cashe: false});
 
-    //По выбору checkbox'а проставляем 1 колонку пометки на удаление
-    $('#TableRows').on('change', '.del_Checkbox',function() {
-      var mark_del = Number($(this).closest('tr').children('.mark_del').html());
-      mark_del = (mark_del+1) % 2;
+    //Вводим данные о структуре таблицы #TableRows
+    //Обязательные колонки
+    $('#TableRows').data('mandatory_columns',[3,5,6]);
+    //Индекс колонки пометки на удаление
+    $('#TableRows').data('mark_del_column',1);
 
-      $(this).closest('tr').toggleClass('mark_del');
-      $(this).closest('tr').children('.mark_del').html(mark_del);
+    //Данные первой колонки с выпадающими списками
+    $('#TableRows tr td:nth-child(6)').data('select_provider_table_name','Privilege_types')
+    $('#TableRows tr td:nth-child(6)').data('select_provider_column_name','priv_tp_name')
+    $('#TableRows tr td:nth-child(6)').data('select_provider_column_id','priv_tp_id')
 
-      //Подсвечиваем незаполненные
-      check_table_notempty ('TableRows', [3,5,6], 1);
-    });
-
-    //В момент выхода из редактирования - заменяем поле ввода/выпадающий список на текст с содержимым элемента
-    $('#TableRows').on('blur', '.inputActive', function(){
-      $(this).removeClass('inputActive');
-
-      //Устанавливаем необходимый класс в зависимости от типа элемента
-      if ($(this).is('select')){
-        var contentAfterEdit = $('option:selected',this).text();
-        $(this).parent().attr('class','td_Selectable');
-        // устанавливаем необходимое значение ID из связанной таблицы в соотв-е поля
-        $(this).parent().prev().html($(this).val());
-        // устанавливаем флаг mark_edit на строке, если было изменение в значении
-        if ($(this).val() != contentBeforeEdit) {
-          $(this).closest('tr').children('.mark_edit').html(1);
-        }
-      }
-      else if ($(this).is('input')) {
-        var contentAfterEdit = $(this).get(0).value;
-          $(this).parent().attr('class','td_Editable');
-          // устанавливаем флаг mark_edit на строке, если было изменение в значении
-          if (contentAfterEdit != contentBeforeEdit) {
-            $(this).closest('tr').children('.mark_edit').html(1);
-          }
-      }
-      //Устанавливаем выбранное/введенное значение
-      $(this).parent().html(contentAfterEdit);
-
-      //подсвечиваем незаполненные
-      check_table_notempty ('TableRows', [3,5,6], 1);
-    });
-
-    //Добавляем строку
+    //Обработка добавления строки
     $('#Add_row').on('click',function() {
       $('#TableRows').append( '<tr><td class="td_id"></td>'+
                               '<td class="mark_del Hide_Column">0</td>'+
                               '<td class="mark_edit Hide_Column">0</td>'+
                               '<td class="td_Editable"></td>'+
                               '<td class="Hide_Column"></td>'+
-                              '<td class="td_Selectable"></td>'+
+                              '<td class="td_Selectable"'+
+                                  //Для выпадающего меню - добавляем данные в тег
+                                  'data-select_provider_table_name = "Privilege_types"'+
+                                  'data-select_provider_column_name = "priv_tp_name"'+
+                                  'data-select_provider_column_id = "priv_tp_id"></td>'+
                               '<td class="td_Editable"></td>'+
                               '<td align="center"><input type="checkbox" class="del_Checkbox"></td></tr>');
+
       //подсвечиваем незаполненные
-      check_table_notempty ('TableRows', [3,5,6], 1);
+      check_table_notempty ('TableRows');
+
+
     });
 
 

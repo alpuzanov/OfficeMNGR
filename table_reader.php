@@ -15,6 +15,9 @@
       case 'Resource_types':
             $tbl = 'Resource_types';
             break;
+      case 'companies':
+            $tbl = 'companies';
+            break;
 
       // ДОПИСАТЬ возврат ошибки в случае, если не введена таблица
     }
