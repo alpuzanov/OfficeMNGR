@@ -14,6 +14,9 @@ if (!isset($_SESSION['user_id'])) {
 <!DOCTYPE html>
 <html>
 <link type="text/css" rel="stylesheet" href="MyStyle.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src = "MyUtil.js"></script>
+
   <head>
     <title>Office Manager</title>
   </head>
@@ -21,9 +24,9 @@ if (!isset($_SESSION['user_id'])) {
 <body id="PageBody">
   <?php
   require_once "NavBar.php";
-  echo('<pre>');
-  var_dump($_SESSION['company']);
-  echo('</pre>');
+  // echo('<pre>');
+  // var_dump($_SESSION['company']);
+  // echo('</pre>');
   ?>
 <div>
   <h2>Добро пожаловать, <?php echo ($_SESSION['username']);?></h2>

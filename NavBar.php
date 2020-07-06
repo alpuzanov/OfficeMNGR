@@ -26,7 +26,7 @@
         <ul>
           <!-- Компания проставляется исходя из текущего значения в php SESSION, применяется таблица для использования стандартного механизма заполнения drop-down'а -->
           <li>Компания: <table class="No_style" id="CompTbl"><td class="Hide_Column"><?php echo(key($_SESSION['company']))?></td>
-                        <td class="td_Selectable"
+                        <td class="No_style td_Selectable"
                             data-select_provider_table_name = "companies"
                             data-select_provider_column_name = "comp_name"
                             data-select_provider_column_id = "comp_id"><?php echo (reset($_SESSION['company'])) ?></td></table></li>
@@ -53,7 +53,7 @@
             }).always(function (data) {
               window.location.reload(false);
             });
-      }, 100);
+      }, 50);
     });
 
   });

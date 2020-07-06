@@ -148,7 +148,7 @@ function ValidateEmailPass(id_pass, id_email) {
       });
 
 
-      //По клику меняем содержание ячейки с классом td_Selectable на лист выбора с содержимым ячейки
+      //2 - По клику меняем содержание ячейки с классом td_Selectable на лист выбора с содержимым ячейки
       $('#PageBody').on('click', '.td_Selectable', function() {
           contentBeforeEdit = Number($(this).prev().text());
 
@@ -171,7 +171,7 @@ function ValidateEmailPass(id_pass, id_email) {
           })
       });
 
-      //В момент выхода из редактирования Input или Select - заменяем поле ввода/выпадающий список на текст с содержимым элемента
+      //3 - В момент выхода из редактирования Input или Select - заменяем поле ввода/выпадающий список на текст с содержимым элемента
       $('#PageBody').on('blur', '.inputActive', function(){
         $(this).removeClass('inputActive');
         //Устанавливаем необходимый класс в зависимости от типа элемента
@@ -204,7 +204,7 @@ function ValidateEmailPass(id_pass, id_email) {
         check_table_notempty (TableId);
       });
 
-      //По выбору checkbox'а об удалении - проставляем в колонку с классом "mark_del" пометку на удаление, по снятию - убираем
+      //4 - По выбору checkbox'а об удалении - проставляем в колонку с классом "mark_del" пометку на удаление, по снятию - убираем
       $('#PageBody').on('change', '.del_Checkbox',function() {
         var mark_del = Number($(this).closest('tr').children('.mark_del').html());
         mark_del = (mark_del+1) % 2;
@@ -214,6 +214,24 @@ function ValidateEmailPass(id_pass, id_email) {
 
         //Подсвечиваем незаполненные
         check_table_notempty ($(this).closest('table').get(0).id);
+      });
+
+      //5 - По выбору checkbox'а в зависимости от настройки "скрыть/показать заблокированных" проставляем классы, отвечающие за отображение заблокированных и поле mark_del для записи пометки о блокировке
+      $('#TableRows').on('change', '.block_Checkbox',function() {
+        var val_after = (Number($(this).get(0).value)+1)%2;
+        $(this).get(0).value = val_after;
+
+        if ($('#Toggle_show_blocked').hasClass('Show_hidden')) {
+          $(this).closest('tr').toggleClass('blocked');
+        }
+        else {
+          $(this).closest('tr').toggleClass('blocked Hide_row');
+        }
+
+        $(this).closest('tr').children('.mark_edit').html(1);
+        $(this).closest('tr').children('.mark_del').html(val_after);
+        //Подсвечиваем незаполненные
+        check_table_notempty ('TableRows');
       });
 
     });

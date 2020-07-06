@@ -33,7 +33,7 @@ if ( isset($_POST['Save']) ) {
 
   // Перенаправляем на login.php
   $_SESSION['$FlashMessages']->set('pass_set', 'sucess', 'Пароль сохранен');
-  header('Location: login.php');
+  header('Location: logout.php');
   return;
   }
 }
@@ -43,7 +43,7 @@ if ( isset($_POST['Save']) ) {
 if (!isset($_GET['invitation'])) {
 ///!!!!!!! ДОПИСАТЬ логирование
   $_SESSION['$FlashMessages']->set('no_register_token', 'error', 'Попытка регистрации без "приглашения"');
-  header("Location: login.php");
+  header("Location: logout.php");
   return;
 }
 else {
@@ -73,7 +73,7 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
 if ( $row === false )
   {
     $_SESSION['$FlashMessages']->set('unvalid_token', 'error', 'Предоставленное "приглашение" не зарегистрировано');
-    header("Location: login.php");
+    header("Location: logout.php");
     return;
   }
 

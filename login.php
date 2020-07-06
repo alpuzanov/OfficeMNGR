@@ -1,5 +1,3 @@
-
-<script type = "text/javascript" src = "MyUtil.js"></script>
 <?php
 require_once "pdo.php";
 require_once "MyUtil.php";
@@ -103,6 +101,9 @@ if ( isset($_POST['email']) && isset($_POST['pass']) )
 <!DOCTYPE html>
 <html>
 <link type="text/css" rel="stylesheet" href="MyStyle.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src = "MyUtil.js"></script>
+
 <head>
 <title>Office Manager Login</title>
 </head>
