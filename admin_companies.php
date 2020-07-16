@@ -27,14 +27,22 @@ $tb_contents = $tb_contents -> fetchall();
 
 ?>
 
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<link type="text/css" rel="stylesheet" href="MyStyle.css">
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
+
 <script src = "MyUtil.js"></script>
-
-
   <head>
+    <!-- Стили -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+    <link type="text/css" rel="stylesheet" href="MyStyle.css">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Office Manager - Manage Companies</title>
   </head>
 
@@ -46,32 +54,40 @@ $tb_contents = $tb_contents -> fetchall();
   $_SESSION['$FlashMessages']->show('rows_deleted');
   $_SESSION['$FlashMessages']->show('rows_updated');
 ?>
-<div>
-  <h3>Компании-партнеры:</h3>
+<div class="container py-4">
+  <h4 class="py-2">Компании-партнеры:</h4>
   <form method="post">
-    <input type="button" value="Добавить" id="Add_row">
-      <table id="TableRows">
-        <tr class="tr_heading">
-          <th>ID</th>
-          <th class="Hide_Column">mark_del</th>
-          <th class="Hide_Column">mark_edit</th>
-          <th>Компания</th>
-          <th>Описание</th>
-          <th>Удалить</th>
-        </tr>
-        <?php
-        for ($i = 0; $i < $Rows_num; $i++) {
-          echo('<tr><td class="td_id">'.$tb_contents[$i]['comp_id'].'</td>');
-          echo('<td class="mark_del Hide_Column">0</td>');
-          echo('<td class="mark_edit Hide_Column">0</td>');
-          echo('<td class="td_Editable">'.$tb_contents[$i]['comp_name'].'</td>');
-          echo('<td class="td_Editable">'.$tb_contents[$i]['comp_description'].'</td>');
-          echo('<td align="center"><input type="checkbox" class="del_Checkbox"></td></tr>');
-        }
-        ?>
+    <div class="btn-group py-2">
+      <input type="button" class="btn btn-secondary" value="Добавить" id="Add_row">
+      <input type="button" class="btn btn-dark" value="Сохранить" id="Save_btn">
+    </div>
+
+      <table id="TableRows" class="table table-striped">
+        <thead>
+          <tr class="tr_heading">
+            <th scope="col" style="width: 3%">ID</th>
+            <th scope="col" class="Hide_Column">mark_del</th>
+            <th scope="col" class="Hide_Column">mark_edit</th>
+            <th scope="col" style="width: 46%">Компания</th>
+            <th scope="col" style="width: 46%">Описание</th>
+            <th scope="col" style="width: 5%">Удалить</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+          for ($i = 0; $i < $Rows_num; $i++) {
+            echo('<tr><th scope="row" class="td_id">'.$tb_contents[$i]['comp_id'].'</th>');
+            echo('<td class="mark_del Hide_Column">0</td>');
+            echo('<td class="mark_edit Hide_Column">0</td>');
+            echo('<td class="td_Editable">'.$tb_contents[$i]['comp_name'].'</td>');
+            echo('<td class="td_Editable">'.$tb_contents[$i]['comp_description'].'</td>');
+            echo('<td align="center"><input type="checkbox" class="del_Checkbox"></td></tr>');
+          }
+          ?>
+        </tbody>
       </table>
 
-  <input type="button" value="Сохранить" id="Save_btn">
+
   <img id="load_spin" class="hidden" src="images/load.gif" height = "20" alt="Loading...">
   </form>
 
@@ -117,11 +133,10 @@ $tb_contents = $tb_contents -> fetchall();
 
             //Забираем данные в массив tbl
             var tbl = $('table#TableRows tr:not(.tr_heading)').get().map(function(row) {
-              return $(row).find('td').get().map(function(cell) {
+              return $(row).find('td, th').get().map(function(cell) {
                 return $(cell).html();
               });
             });
-
 //Делим tbl на 3 массива:
         //Удаляемые строки (проставлена отметка на удаление, есть id)
         var arr_for_deletion = [];
@@ -131,6 +146,8 @@ $tb_contents = $tb_contents -> fetchall();
         var arr_for_adding = [];
 
         var len = $('#TableRows').find('tr').length;
+
+        console.log(tbl);
 
         for (i = 0; i < len-1; i++) {
           if ((Number(tbl[i][1]) == 1) && (tbl[i][0] !== '')) {

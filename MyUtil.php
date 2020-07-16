@@ -43,16 +43,25 @@
       if (array_key_exists(strval($handler), $this->Messages)) {
         switch ($this->Messages[strval($handler)]['type']) {
             case 'error':
-              $msg_color = 'red';
+              $msg_tp = 'danger';
               break;
             case 'warning':
-              $msg_color = 'orange';
+              $msg_tp = 'warning';
               break;
             case 'success':
-              $msg_color = 'green';
+              $msg_tp = 'success';
+              break;
+            case 'info':
+              $msg_tp = 'info';
               break;
           }
-        echo '<p style="color: '.$msg_color.'">'.$this->Messages[strval($handler)]['text'].'</p>';
+        // echo '<p style="color: '.$msg_color.'">'.$this->Messages[strval($handler)]['text'].'</p>';
+        echo '<div class="alert position-absolute alert-'.$msg_tp.' alert-dismissible fade show shadow" role="alert">'
+                .$this->Messages[strval($handler)]['text'].
+                '<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true"><strong>&times;</strong></span>
+                </button>
+              </div>';
         unset($this->Messages[strval($handler)]);
       }
     }

@@ -132,6 +132,11 @@ function ValidateEmailPass(id_pass, id_email) {
 
     }
 
+    //Функция для замены кавычек
+    function htmlEntities(str) {
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
 
 // Функции подвешивающиеся после загрузки документа
     $(document).ready(function()
@@ -141,8 +146,9 @@ function ValidateEmailPass(id_pass, id_email) {
 
       //1 - По клику меняем содержание ячейки с классом td_Editable на поле ввода с содержимым ячейки
       $('#PageBody').on('click', '.td_Editable',function() {
-        contentBeforeEdit = $(this).text();
+        contentBeforeEdit = htmlEntities($(this).text());
         $(this).removeClass('td_Editable');
+        $(this).addClass('td_IsEdited');
         $(this).html('<input type="text" value="'+contentBeforeEdit+'" class="inputActive">');
         $(this).children('.inputActive').select();
       });
@@ -209,7 +215,7 @@ function ValidateEmailPass(id_pass, id_email) {
         var mark_del = Number($(this).closest('tr').children('.mark_del').html());
         mark_del = (mark_del+1) % 2;
 
-        $(this).closest('tr').toggleClass('mark_del');
+        $(this).closest('tr').toggleClass('table-danger');
         $(this).closest('tr').children('.mark_del').html(mark_del);
 
         //Подсвечиваем незаполненные

@@ -115,7 +115,7 @@
           $stmt->execute($data_arr);
         }
 
-        $_SESSION['$FlashMessages']->set('rows_added', 'success', 'Добавлено '.count($data->rows_add).' стр.');
+        $_SESSION['$FlashMessages']->set('rows_added', 'info', 'Добавлено '.count($data->rows_add).' стр.');
     }
 
 // 2 - Если есть элементы в массиве rows_del, удаляем по id
@@ -136,7 +136,7 @@
           $stmt->execute($data_arr);
         }
 
-      $_SESSION['$FlashMessages']->set('rows_deleted', 'success', 'Удалено '.count($data->rows_del).' стр.');
+      $_SESSION['$FlashMessages']->set('rows_deleted', 'info', 'Удалено '.count($data->rows_del).' стр.');
     }
 
 // 3 - Если есть элементы в массиве rows_merge, обновляе значения по id
@@ -163,7 +163,7 @@
           $data_arr = (array) $data->rows_merge[$i];
           $stmt->execute($data_arr);
         }
-      $_SESSION['$FlashMessages']->set('rows_updated', 'success', 'Обновлено '.count($data->rows_merge).' стр.');
+      $_SESSION['$FlashMessages']->set('rows_updated', 'info', 'Обновлено '.count($data->rows_merge).' стр.');
     }
 
 

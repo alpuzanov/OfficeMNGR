@@ -32,6 +32,7 @@ if (!isset($_SESSION['user_id'])) {
   <h2>Добро пожаловать, <?php echo ($_SESSION['username']);?></h2>
   <?php
     $_SESSION['$FlashMessages']->show('login ok');
+    $_SESSION['$FlashMessages']->show('no_floor_id');
   ?>
 </div>
 </body>

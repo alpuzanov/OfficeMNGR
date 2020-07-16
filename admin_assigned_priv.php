@@ -325,7 +325,7 @@ $tb_CompPriv_contents = $stmt -> fetchall(PDO::FETCH_ASSOC);
                     contentType: "application/json"
                   }).always(function (data) {
                     // window.location.reload(false);
-                    window.location.href = '/teamcalc/admin_users.php';
+                    window.location.href = '/OfficeMNGR/admin_users.php';
                   });
 
         //Окончание скрипта по кнопке Сохранить

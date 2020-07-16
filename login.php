@@ -100,35 +100,55 @@ if ( isset($_POST['email']) && isset($_POST['pass']) )
 
 <!DOCTYPE html>
 <html>
-<link type="text/css" rel="stylesheet" href="MyStyle.css">
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 <script src = "MyUtil.js"></script>
 
 <head>
-<title>Office Manager Login</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <link href="login_floating_labels.css" rel="stylesheet">
+  <link type="text/css" rel="stylesheet" href="MyStyle.css">
+  <title>Office Manager Login</title>
 </head>
-<body id="PageBody">
-<div class="container">
-<h1>Представьтесь, пожалуйста</h1>
-<?php
-  $_SESSION['$FlashMessages']->show('login fail');
-  $_SESSION['$FlashMessages']->show('bad email/pwd');
-  $_SESSION['$FlashMessages']->show('user blocked');
-  $_SESSION['$FlashMessages']->show('user_not_logged_in');
-  $_SESSION['$FlashMessages']->show('no_register_token');
-  $_SESSION['$FlashMessages']->show('unvalid_token');
-?>
-<form method="POST">
-    <label for="email">Email:</label></br>
-    <input type="text" name="email" id="email" ></br>
+
+  <body id="PageBody">
     <?php
-      $_SESSION['$FlashMessages']->show('bad email format');
+      $_SESSION['$FlashMessages']->show('login fail');
+      $_SESSION['$FlashMessages']->show('bad email/pwd');
+      $_SESSION['$FlashMessages']->show('user blocked');
+      $_SESSION['$FlashMessages']->show('user_not_logged_in');
+      $_SESSION['$FlashMessages']->show('no_register_token');
+      $_SESSION['$FlashMessages']->show('unvalid_token');
     ?>
-    <label for="pass">Пароль:</label></br>
-    <input type="password" name="pass" id="pass"></br></br>
-    <input type="submit" onclick="return ValidateEmailPass('pass', 'email');" value="Войти">
-    <input type="submit" name="cancel" value="Отмена">
-</form>
-</div>
-</body>
+
+    <form method="POST" class="form-signin">
+
+      <div class="text-center mb-4">
+        <img class="mb-4" src="assets/brand/avocado.png" alt="Avocado-Office" width="100" height="100">
+        <h1 class="h3 mb-3 font-weight-normal">Представьтесь, пожалуйста</h1>
+      </div>
+
+      <div class="form-label-group">
+        <input type="email" id="email" name="email" class="form-control" placeholder="Email" required autofocus>
+        <label for="inputEmail">Email</label>
+      </div>
+
+      <?php
+        // $_SESSION['$FlashMessages']->show('bad email format');
+      ?>
+
+      <div class="form-label-group">
+        <input type="password" name="pass" id="pass" class="form-control" placeholder="Пароль" required>
+        <label for="inputPassword">Пароль</label>
+      </div>
+
+      <button class="btn btn-lg btn-dark btn-block" type="submit"  value="Войти">Войти</button>
+      <button class="btn btn-lg btn-secondary btn-block" type="submit" value="Отмена" name="cancel">Отмена</button>
+      <p class="mt-5 mb-3 text-muted text-center">&copy; 2020, Avocado Soft</p>
+
+
+        <!-- <input type="submit" name="cancel" value="Отмена"> -->
+    </form>
+  </body>
 </html>
